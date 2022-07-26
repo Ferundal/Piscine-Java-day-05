@@ -21,16 +21,9 @@ public class Program {
         hikariDataSource.setJdbcUrl("jdbc:postgresql://localhost:5432/postgres");
         hikariDataSource.setUsername("postgres");
         hikariDataSource.setPassword("1984");
-
-        System.out.println("Enter a message ID");
-        Scanner console = new Scanner(System.in);
-
-        Long messageIndex = null;
-        while (messageIndex == null) {
-            String nextLine = console.nextLine();
-            messageIndex = Long.parseLong(nextLine);
-        }
         MessagesRepositoryJdbcImpl messagesRepository = new MessagesRepositoryJdbcImpl(hikariDataSource);
+
+
         Optional<Message> messageOptional;
         try {
             messageOptional = messagesRepository.findById(messageIndex);
