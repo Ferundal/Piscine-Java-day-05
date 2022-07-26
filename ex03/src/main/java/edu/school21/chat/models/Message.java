@@ -70,5 +70,11 @@ public class Message {
         return messageDateTime;
     }
 
+    public void setText(String text) {
+        this.text = text;
+    }
 
+    public void setMessageDateTime(LocalDateTime messageDateTime) {
+        this.messageDateTime = messageDateTime;
+    }
 }

@@ -26,35 +26,12 @@ public class Program {
         hikariDataSource.setUsername(DATA_BASE_USER);
         hikariDataSource.setPassword(DATA_BASE_PASSWORD);
         MessagesRepositoryJdbcImpl messagesRepository = new MessagesRepositoryJdbcImpl(hikariDataSource);
-        User creator = new User(3L, "user", "user");
-        User author = creator;
-        Chatroom room = new Chatroom(5L, "room", creator);
-        Message message = new Message(null, author, room, "Hello!", LocalDateTime.now());
-        try {
-            messagesRepository.save(message);
-        } catch (NotSavedSubEntityException e) {
-            throw new RuntimeException(e);
-        }
-        System.out.println(message.getIdentifier());
-
-        creator = new User(40000L, "user", "user");
-        author = creator;
-        room = new Chatroom(5L, "room", creator);
-        message = new Message(null, author, room, "Hello!", LocalDateTime.now());
-        try {
-            messagesRepository.save(message);
-        } catch (NotSavedSubEntityException e) {
-            System.out.println(e.toString());
-        }
-
-        creator = new User(null, "user", "user");
-        author = creator;
-        room = new Chatroom(5L, "room", creator);
-        message = new Message(null, author, room, "Hello!", LocalDateTime.now());
-        try {
-            messagesRepository.save(message);
-        } catch (NotSavedSubEntityException e) {
-            System.out.println(e.toString());
+        Optional<Message> messageOptional = messagesRepository.findById(1L);
+        if (messageOptional.isPresent()) {
+            Message message = messageOptional.get();
+            message.setText("YOBA ETO YA!");
+            message.setMessageDateTime(null);
+            messagesRepository.update(message);
         }
     }
 }

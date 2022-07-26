@@ -17,6 +17,38 @@ public class MessagesRepositoryJdbcImpl implements MessagesRepository {
     }
 
     @Override
+    public void update(Message message) {
+        final String QUERY_TEMPLATE = "UPDATE chat.messages SET " +
+                "room_id = ?, " +
+                "sender = ?, " +
+                "message = ?, " +
+                "time = ? "
+                +" WHERE id = ? RETURNING *";
+        PreparedStatement query;
+        try {
+            Connection connection = dataSource.getConnection();
+            query = connection.prepareStatement(QUERY_TEMPLATE);
+
+            query.setLong(1, message.getRoom().getIdentifier());
+            query.setLong(2, message.getAuthor().getIdentifier());
+            query.setString(3, message.getText());
+            try {
+                query.setTimestamp(4, Timestamp.valueOf(message.getMessageDateTime()));
+            } catch (NullPointerException nullPointerException) {
+                query.setTimestamp(4, null);
+            }
+                query.setLong(5, message.getIdentifier());
+
+        } catch (java.sql.SQLException sqlException) {
+            throw new RuntimeException(sqlException);
+        }
+        try {
+            query.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    @Override
     public void save(Message message) throws NotSavedSubEntityException {
         final String QUERY_TEMPLATE = "INSERT INTO chat.messages (room_id, sender, message, time) VALUES (?, ?, ?, ?) RETURNING *";
         PreparedStatement query;
@@ -50,22 +82,28 @@ public class MessagesRepositoryJdbcImpl implements MessagesRepository {
     }
 
     @Override
-    public Optional<Message> findById(Long id) throws SQLException {
+    public Optional<Message> findById(Long id) {
         final String QUERY_TEMPLATE = "SELECT * FROM chat.messages WHERE id = ";
-        Connection connection = dataSource.getConnection();
-        Statement statement = connection.createStatement();
+        Connection connection = null;
+        Optional<Message> optionalMessage;
+        try {
+            connection = dataSource.getConnection();
+            Statement statement = connection.createStatement();
 
-        String query = QUERY_TEMPLATE + id;
-        ResultSet resultSet = statement.executeQuery(query);
-        resultSet.next();
+            String query = QUERY_TEMPLATE + id;
+            ResultSet resultSet = statement.executeQuery(query);
+            resultSet.next();
 
-        User tempUser = new User(1L, "lupa", "pupa");
-        Chatroom tempChatroom = new Chatroom(1L, "deafultChatname", null);
-        Optional<Message> optionalMessage = Optional.of(new Message(1L,
-                tempUser,
-                tempChatroom,
-                resultSet.getString("message"),
-                LocalDateTime.now()));
+            User tempUser = new User(1L, "lupa", "pupa");
+            Chatroom tempChatroom = new Chatroom(1L, "deafultChatname", null);
+            optionalMessage = Optional.of(new Message(1L,
+                    tempUser,
+                    tempChatroom,
+                    resultSet.getString("message"),
+                    LocalDateTime.now()));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         return optionalMessage;
     }
 }
