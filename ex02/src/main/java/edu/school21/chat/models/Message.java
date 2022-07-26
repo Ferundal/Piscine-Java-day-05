@@ -4,13 +4,13 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Message {
-    Integer identifier;
+    Long identifier;
     User author;
     Chatroom room;
     String text;
     LocalDateTime messageDateTime;
 
-    public Message(Integer identifier, User author, Chatroom room, String text, LocalDateTime messageDateTime) {
+    public Message(Long identifier, User author, Chatroom room, String text, LocalDateTime messageDateTime) {
         this.identifier = identifier;
         this.author = author;
         this.room = room;
@@ -45,4 +45,30 @@ public class Message {
                 "\nmessageDateTime=" + messageDateTime +
                 "\n}";
     }
+
+    public Long getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(Long identifier) {
+        this.identifier = identifier;
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public Chatroom getRoom() {
+        return room;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public LocalDateTime getMessageDateTime() {
+        return messageDateTime;
+    }
+
+
 }

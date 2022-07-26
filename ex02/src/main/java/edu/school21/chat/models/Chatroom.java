@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Chatroom {
-    private Integer identifier;
+    private Long identifier;
     private String chatName;
     User owner;
     List<Message> messages;
@@ -13,7 +13,7 @@ public class Chatroom {
         messages = new LinkedList<Message>();
     }
 
-    public Chatroom (Integer identifier, String chatName, User owner) {
+    public Chatroom (Long identifier, String chatName, User owner) {
         this.identifier = identifier;
         this.chatName = chatName;
         this.owner = owner;
@@ -47,5 +47,9 @@ public class Chatroom {
 
     public String getChatName() {
         return chatName;
+    }
+
+    public Long getIdentifier() {
+        return identifier;
     }
 }

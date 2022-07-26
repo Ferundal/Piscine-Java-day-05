@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class User {
-    private Integer identifier;
+    private Long identifier;
     private String login;
     private String password;
     private List<Chatroom> createdChatrooms;
@@ -16,7 +16,7 @@ public class User {
         memberRooms = new LinkedList<Chatroom>();
     }
 
-    public User (Integer identifier, String login, String password) {
+    public User (Long identifier, String login, String password) {
         this.identifier = identifier;
         this.login = login;
         this.password = password;
@@ -44,5 +44,17 @@ public class User {
                 ", createdChatrooms=" + createdChatrooms +
                 ", memberRooms=" + memberRooms +
                 '}';
+    }
+
+    public Long getIdentifier() {
+        return identifier;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }
